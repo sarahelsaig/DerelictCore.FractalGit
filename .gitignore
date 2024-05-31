@@ -376,7 +376,10 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# VS Code files for those working on multiple tools
+# Rider files
+.idea/
+
+# VS Code files
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
