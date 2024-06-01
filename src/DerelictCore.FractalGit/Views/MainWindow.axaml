@@ -3,6 +3,7 @@
         xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:DerelictCore.FractalGit.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="DerelictCore.FractalGit.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -15,6 +16,9 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <DockPanel>
+        <TextBox DockPanel.Dock="Right">Hello</TextBox>
+        <controls:GitGraph></controls:GitGraph>
+    </DockPanel>
 
 </Window>
