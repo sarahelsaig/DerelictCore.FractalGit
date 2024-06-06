@@ -48,7 +48,7 @@ public class GitLogLine
                     {
                         results.Add(new GitLogLine
                         {
-                            Graph = x[0],
+                            Graph = x[0].TrimEnd(),
                             Hash = x[1],
                             AuthorName = x[2],
                             AuthorEmail = x[3],

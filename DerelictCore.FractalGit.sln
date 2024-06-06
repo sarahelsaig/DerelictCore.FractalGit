@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerelictCore.FractalGit.Tests", "src\DerelictCore.FractalGit.Tests\DerelictCore.FractalGit.Tests.csproj", "{5DD04E32-5A13-4717-BBD2-AFC609C01247}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,8 +28,13 @@ Global
 		{CA36A491-3E29-4F2E-B45C-01DFF1713C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA36A491-3E29-4F2E-B45C-01DFF1713C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA36A491-3E29-4F2E-B45C-01DFF1713C7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD04E32-5A13-4717-BBD2-AFC609C01247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD04E32-5A13-4717-BBD2-AFC609C01247}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD04E32-5A13-4717-BBD2-AFC609C01247}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD04E32-5A13-4717-BBD2-AFC609C01247}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CA36A491-3E29-4F2E-B45C-01DFF1713C7E} = {53ABF49A-BF5B-469E-BC86-6D88718B49ED}
+		{5DD04E32-5A13-4717-BBD2-AFC609C01247} = {53ABF49A-BF5B-469E-BC86-6D88718B49ED}
 	EndGlobalSection
 EndGlobal
