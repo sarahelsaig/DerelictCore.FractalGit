@@ -18,7 +18,7 @@
 
     <DockPanel>
         <TextBox DockPanel.Dock="Right">Hello</TextBox>
-        <controls:GitGraph></controls:GitGraph>
+        <controls:GitGraph DataContext="{Binding Graph}"></controls:GitGraph>
     </DockPanel>
 
 </Window>

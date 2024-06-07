@@ -3,20 +3,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
+             xmlns:controls="clr-namespace:DerelictCore.FractalGit.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DerelictCore.FractalGit.Controls.GitGraph"
              x:DataType="vm:GitGraphViewModel">
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:GitGraphViewModel/>
+        <vm:GitGraphViewModel />
     </Design.DataContext>
 
-    <DataGrid ItemsSource="{Binding Lines}">
-        <DataGrid.Columns>
-            <DataGridTextColumn Header="Graph" Binding="{Binding Graph}" />
-        </DataGrid.Columns>
-
-    </DataGrid>
+    <DockPanel>
+        <Label DockPanel.Dock="Top" Content="{Binding WorkingDirectory}" />
+        <DataGrid ItemsSource="{Binding Lines}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Graph" Binding="{Binding Graph}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </UserControl>
 
