@@ -1,5 +1,4 @@
 using DerelictCore.FractalGit.Models;
-using Xunit.Abstractions;
 
 namespace DerelictCore.FractalGit.Tests;
 
@@ -28,7 +27,12 @@ public class GitLogLineTests
                     Path.GetFileName(path));
 
             // Get all git log results.
-            var lines = await GitLogLine.ExecuteAsync("git", path);
+            var lines = (await GitLogLine.ExecuteAsync("git", path)).ToList();
+
+            // Uncomment this if GitLogLine has changed to update the sample.
+            //// await File.WriteAllTextAsync(
+            ////     "/home/sarah/Projects/DerelictCore.FractalGit/src/DerelictCore.FractalGit/Models/GitLogLine.json",
+            ////     JsonSerializer.Serialize(lines));
 
             // Take and format the first several results for comparison.
             var actual = lines
