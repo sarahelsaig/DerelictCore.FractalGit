@@ -5,7 +5,7 @@ namespace DerelictCore.FractalGit.ViewModels;
 
 public class GitGraphViewModel : ViewModelBase
 {
-    public string WorkingDirectory { get; set; } = "/home/sarah/Projects/DerelictCore.FractalGit";
+    public string WorkingDirectory { get; set; } = string.Empty;
 
-    public ObservableCollection<GitLogLine> Lines { get; set; } = [];
+    public ObservableCollection<GitLogLine> Lines { get; set; } = GitLogLine.SampleDataSet;
 }

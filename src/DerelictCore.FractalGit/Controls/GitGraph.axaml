@@ -2,22 +2,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:DerelictCore.FractalGit.Models"
              xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
-             xmlns:controls="clr-namespace:DerelictCore.FractalGit.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DerelictCore.FractalGit.Controls.GitGraph"
              x:DataType="vm:GitGraphViewModel">
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:GitGraphViewModel />
+        <vm:GitGraphViewModel WorkingDirectory="/home/sarah/Projects/DerelictCore.FractalGit" />
     </Design.DataContext>
 
     <DockPanel>
         <Label DockPanel.Dock="Top" Content="{Binding WorkingDirectory}" />
-        <DataGrid ItemsSource="{Binding Lines}">
+        <DataGrid ItemsSource="{Binding Lines}"
+                  IsReadOnly="True"
+                  GridLinesVisibility="All"
+                  BorderThickness="1"
+                  BorderBrush="Gray">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Graph" Binding="{Binding Graph}" />
+                <DataGridTextColumn Header="Hash" Binding="{Binding Hash}" />
+                <DataGridTextColumn Header="Author Name" Binding="{Binding AuthorName}" />
+                <DataGridTextColumn Header="Author e-Mail" Binding="{Binding AuthorEmail}" />
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

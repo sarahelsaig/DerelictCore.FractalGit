@@ -1,13 +1,16 @@
 using CliWrap;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DerelictCore.FractalGit.Models;
 
-public class GitLogLine
+public partial class GitLogLine
 {
     public string? Graph { get; set; }
     public string? Hash { get; set; }
