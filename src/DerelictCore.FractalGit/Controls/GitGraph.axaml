@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:DerelictCore.FractalGit"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="using:DerelictCore.FractalGit.Models"
              xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
@@ -19,12 +20,56 @@
                   IsReadOnly="True"
                   GridLinesVisibility="All"
                   BorderThickness="1"
-                  BorderBrush="Gray">
+                  BorderBrush="Gray"
+                  CanUserResizeColumns="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Graph" Binding="{Binding Graph}" />
-                <DataGridTextColumn Header="Hash" Binding="{Binding Hash}" />
-                <DataGridTextColumn Header="Author Name" Binding="{Binding AuthorName}" />
-                <DataGridTextColumn Header="Author e-Mail" Binding="{Binding AuthorEmail}" />
+                <DataGridTemplateColumn Header="Graph">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding Graph}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Description">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <DockPanel>
+                                <ListBox DockPanel.Dock="Left" ItemsSource="{Binding RefNames}">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                </ListBox>
+                                <TextBlock Text="{Binding Subject}"></TextBlock>
+                            </DockPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Author">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding AuthorName}"
+                                       ToolTip.Tip="{Binding AuthorEmail}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding AuthorDate, Converter={x:Static local:Converters.HumanDateTime}}"
+                                       ToolTip.Tip="{Binding AuthorDate, Converter={x:Static local:Converters.IsoDateTime}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Hash">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding Hash, Converter={x:Static local:Converters.StringTake}, ConverterParameter=8}"
+                                       ToolTip.Tip="{Binding Hash}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

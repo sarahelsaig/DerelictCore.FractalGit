@@ -18,7 +18,7 @@ public partial class GitLogLine
             {
                 // Update the GitLogLine.json using the unit test and then copy the new value here.
                 var json = File.ReadAllText(Path.Join("Models", "GitLogLine.json"));
-                var list = JsonSerializer.Deserialize<IEnumerable<GitLogLine>>(json)?.Take(1000) ?? [];
+                var list = JsonSerializer.Deserialize<IEnumerable<GitLogLine>>(json) ?? [];
                 _sampleDataSet = new(list);
             }
 

@@ -1,10 +1,7 @@
 using CliWrap;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.IO;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,7 +53,7 @@ public partial class GitLogLine
                             AuthorName = x[2],
                             AuthorEmail = x[3],
                             AuthorDate = DateTime.Parse(x[4], CultureInfo.InvariantCulture),
-                            RefNames = x[5].Split(", "),
+                            RefNames = x[5].Trim().Split(", ", StringSplitOptions.RemoveEmptyEntries),
                             Subject = x[6],
                         });
                     }

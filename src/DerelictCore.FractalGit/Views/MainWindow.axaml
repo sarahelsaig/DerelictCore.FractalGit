@@ -17,7 +17,7 @@
     </Design.DataContext>
 
     <DockPanel>
-        <TextBox DockPanel.Dock="Right">Hello</TextBox>
+        <TextBox DockPanel.Dock="Left">Sidebar Placeholder</TextBox>
         <controls:GitGraph DataContext="{Binding Graph}"></controls:GitGraph>
     </DockPanel>
 
