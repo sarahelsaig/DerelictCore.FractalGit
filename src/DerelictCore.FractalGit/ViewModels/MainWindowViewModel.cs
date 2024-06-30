@@ -1,9 +1,22 @@
-﻿namespace DerelictCore.FractalGit.ViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DerelictCore.FractalGit.Models;
 
-public class MainWindowViewModel : ViewModelBase
+namespace DerelictCore.FractalGit.ViewModels;
+
+public partial class MainWindowViewModel : ViewModelBase
 {
-    public string Filter { get; set; } = string.Empty;
-    public GitGraphViewModel Graph { get; set; } = new();
-    public CommitDetailsViewModel Details { get; set; } = new();
-    public int ChangedFileCount { get; set; }
+    [ObservableProperty]
+    private string _filter = string.Empty;
+
+    [ObservableProperty]
+    private int _changedFileCount;
+
+    [ObservableProperty]
+    private GitLogLine? _selectedGitLogLine;
+
+    [ObservableProperty]
+    private GitGraphViewModel _graph = new();
+
+    [ObservableProperty]
+    private CommitDetailsViewModel _details = new();
 }

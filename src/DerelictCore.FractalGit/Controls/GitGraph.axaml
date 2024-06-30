@@ -28,7 +28,8 @@
                   GridLinesVisibility="All"
                   BorderThickness="1"
                   BorderBrush="Gray"
-                  CanUserResizeColumns="True">
+                  CanUserResizeColumns="True"
+                  SelectedItem="{Binding Selected}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Graph">
                     <DataGridTemplateColumn.CellTemplate>
