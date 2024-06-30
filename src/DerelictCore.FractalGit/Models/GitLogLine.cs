@@ -1,7 +1,8 @@
-using CliWrap;
+using DerelictCore.FractalGit.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,8 +19,7 @@ public partial class GitLogLine
     public string? Subject { get; set; }
 
     public static async Task<IEnumerable<GitLogLine>> ExecuteAsync(
-        string gitExecutablePath,
-        string workingDirectory,
+        IGitService gitService,
         CancellationToken cancellationToken = default)
     {
         // SEP=";;$(date +%s);;"; git log --all --oneline --graph --no-abbrev-commit \
@@ -28,25 +28,18 @@ public partial class GitLogLine
         try
         {
             var separator = $";;{Guid.NewGuid():N};;";
-            var arguments = new[]
-            {
+            var lines = await gitService.GitWithOutputAsync(
                 "log",
                 "--all",
                 "--oneline",
                 "--graph",
                 "--no-abbrev-commit",
-                "--format=format:" + string.Join(separator, string.Empty, "%H", "%aN", "%aE", "%aI", "%D", "%s"),
-            };
+                "--format=format:" + string.Join(separator, string.Empty, "%H", "%aN", "%aE", "%aI", "%D", "%s"));
 
-            var results = new List<GitLogLine>();
-            await Cli.Wrap(gitExecutablePath)
-                .WithArguments(arguments)
-                .WithWorkingDirectory(workingDirectory)
-                .WithStandardOutputPipe(PipeTarget.ToDelegate(line =>
-                {
-                    if (!string.IsNullOrWhiteSpace(line) && line.Split(separator) is { Length: 7 } x)
-                    {
-                        results.Add(new GitLogLine
+            var results = lines
+                .SelectMany<string, GitLogLine>(line => !string.IsNullOrWhiteSpace(line) && line.Split(separator) is { Length: 7 } x
+                    ? [
+                        new()
                         {
                             Graph = x[0].TrimEnd(),
                             Hash = x[1],
@@ -55,10 +48,10 @@ public partial class GitLogLine
                             AuthorDate = DateTime.Parse(x[4], CultureInfo.InvariantCulture),
                             RefNames = x[5].Trim().Split(", ", StringSplitOptions.RemoveEmptyEntries),
                             Subject = x[6],
-                        });
-                    }
-                }))
-                .ExecuteAsync(cancellationToken);
+                        }
+                    ]
+                    : [])
+                .ToList();
 
             return results;
         }

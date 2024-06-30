@@ -1,33 +1,36 @@
 using DerelictCore.FractalGit.Models;
+using DerelictCore.FractalGit.Services;
+using Microsoft.Extensions.Logging;
 
 namespace DerelictCore.FractalGit.Tests;
 
 public class GitLogLineTests
 {
-    public const string TestRepositoryUrl = "https://github.com/submodule-test-archive/Open-Source-Orchard-Core-Extensions.git";
+    private const string TestRepositoryUrl = "https://github.com/submodule-test-archive/Open-Source-Orchard-Core-Extensions.git";
 
     private readonly ITestOutputHelper _output;
+    private readonly ILogger _logger;
 
-    public GitLogLineTests(ITestOutputHelper output) => _output = output;
+    public GitLogLineTests(ITestOutputHelper output)
+    {
+        _output = output;
+        _logger = new TestOutputLogger(output);
+    }
 
     [Fact]
     public async Task GitGraphShouldMatchExpectation()
     {
         // Calculate a unique test path inside the operating system's temporary directory. If anything fails here there
         // is nothing to clean up yet.
-        var path = CreateGitDirectory();
+        var service = new GitService("git", CreateGitDirectory(), _logger);
 
         try
         {
             // Clone an archived test repository for consistent results.
-            await GitAsync(
-                    workingDirectory: Path.GetDirectoryName(path)!,
-                    "clone",
-                    TestRepositoryUrl,
-                    Path.GetFileName(path));
+            await service.CloneAsync(TestRepositoryUrl);
 
             // Get all git log results.
-            var lines = (await GitLogLine.ExecuteAsync("git", path)).ToList();
+            var lines = (await GitLogLine.ExecuteAsync(service)).ToList();
 
             // Uncomment this if GitLogLine has changed to update the sample.
             //// await File.WriteAllTextAsync(
@@ -74,28 +77,13 @@ public class GitLogLineTests
             // memory/storage leak, so it should be avoided.
             try
             {
-                Directory.Delete(path, recursive: true);
+                Directory.Delete(service.ClonePath, recursive: true);
             }
             catch (Exception exception)
             {
-                _output.WriteLine($"Failed to delete \"{path}\":\n{exception}");
+                _output.WriteLine($"Failed to delete \"{service.ClonePath}\":\n{exception}");
             }
         }
-    }
-
-    private async Task GitAsync(string workingDirectory, params string[] arguments)
-    {
-        var gitCommand = "git " + string.Join(' ', arguments);
-        _output.WriteLine($"Starting command [{gitCommand}] in {workingDirectory}...");
-
-        await Cli.Wrap("git")
-            .WithArguments(arguments)
-            .WithWorkingDirectory(workingDirectory)
-            .WithStandardOutputPipe(PipeTarget.ToDelegate(_output.WriteLine))
-            .WithStandardErrorPipe(PipeTarget.ToDelegate(_output.WriteLine))
-            .ExecuteAsync();
-
-        _output.WriteLine($"Finished command [{gitCommand}] in {workingDirectory}.\n\n");
     }
 
     private static string CreateGitDirectory()
@@ -115,5 +103,20 @@ public class GitLogLineTests
         }
 
         return Path.Join(temp, $"fractalgit-test-{Guid.NewGuid():D}");
+    }
+
+    private class TestOutputLogger : ILogger
+    {
+        private readonly ITestOutputHelper _output;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public TestOutputLogger(ITestOutputHelper output) => _output = output;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) =>
+            _output.WriteLine($"{logLevel}|{eventId.Name}|{formatter(state, exception)}");
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
     }
 }

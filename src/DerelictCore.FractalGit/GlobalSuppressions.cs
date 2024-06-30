@@ -17,3 +17,9 @@ using System.Diagnostics.CodeAnalysis;
     "CA2227:Collection properties should be read only",
     Justification = "Not suitable for this type of application.",
     Scope = "module")]
+
+[assembly: SuppressMessage(
+    "Usage",
+    "VSTHRD100:Avoid async void methods",
+    Justification = "I promise I will wrap them all with blanket try-catch.",
+    Scope = "module")]

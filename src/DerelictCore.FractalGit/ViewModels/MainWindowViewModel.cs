@@ -19,13 +19,15 @@ public partial class MainWindowViewModel : ViewModelBase
     private GitGraphViewModel _graph = new();
 
     [ObservableProperty]
-    private CommitDetailsViewModel _details = new();
+    private CommitDetailsViewModel _details;
+
+    public MainWindowViewModel() => _details = new(this);
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         if (e.PropertyName is nameof(SelectedGitLogLine) && SelectedGitLogLine is { } selected)
         {
-            Details = new(selected);
+            Details = new(this, selected);
         }
 
         base.OnPropertyChanged(e);

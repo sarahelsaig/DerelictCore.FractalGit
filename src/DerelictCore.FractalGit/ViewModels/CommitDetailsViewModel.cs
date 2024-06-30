@@ -2,11 +2,16 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using DerelictCore.FractalGit.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DerelictCore.FractalGit.ViewModels;
 
 public partial class CommitDetailsViewModel : ViewModelBase
 {
+    [ObservableProperty]
+    private GitLogLine _line;
+
     // Get via `git show --format=format:%B cd6506c63b0041cc4fe43df4a14d6eb0c3217674`.
     [ObservableProperty]
     private string? _body;
@@ -21,8 +26,6 @@ public partial class CommitDetailsViewModel : ViewModelBase
     [ObservableProperty]
     private int _commitsBehind;
 
-    public GitLogLine Line { get; set; }
-
     // Get via `git show --format=format:%P cd6506c63b0041cc4fe43df4a14d6eb0c3217674`, space-separated long format.
     public ObservableCollection<string> ParentHashes { get; set; } = [];
 
@@ -33,14 +36,43 @@ public partial class CommitDetailsViewModel : ViewModelBase
     // git log c0118fa..HEAD --ancestry-path --merges --oneline --color | tail -n 1
     public ObservableCollection<string> ContainingBranches { get; set; } = [];
 
-    public CommitDetailsViewModel() => Line = new();
-    public CommitDetailsViewModel(GitLogLine line) => Line = line;
+    public MainWindowViewModel? Main { get; }
+
+    public CommitDetailsViewModel(MainWindowViewModel? main, GitLogLine? line = null)
+    {
+        Main = main;
+        Line = line ?? new();
+    }
+
+    protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        try
+        {
+            if (Main is not null && e.PropertyName is nameof(Line))
+            {
+                await UpdateDetailsAsync();
+            }
+        }
+        catch
+        {
+            // Ignore errors in async event handling.
+        }
+    }
+
+    private async Task UpdateDetailsAsync()
+    {
+        if (Main?.Graph?.WorkingDirectory?.Trim() is not { Length: > 0 } cwd) return;
+
+
+    }
 }
 
 public class DesignCommitDetailsViewModel : CommitDetailsViewModel
 {
     public DesignCommitDetailsViewModel()
-        : base(new()
+        : base(main: null, line: new()
         {
             Graph = "| * | | | | | |",
             Hash = "cd6506c63b0041cc4fe43df4a14d6eb0c3217674",
