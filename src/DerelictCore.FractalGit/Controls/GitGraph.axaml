@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="using:DerelictCore.FractalGit.Models"
              xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
+             xmlns:v="using:DerelictCore.FractalGit.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DerelictCore.FractalGit.Controls.GitGraph"
              x:DataType="vm:GitGraphViewModel">
@@ -29,7 +30,7 @@
                   BorderThickness="1"
                   BorderBrush="Gray"
                   CanUserResizeColumns="True"
-                  SelectedItem="{Binding Selected}">
+                  SelectedItem="{Binding $parent[v:MainWindow].((vm:MainWindowViewModel)DataContext).SelectedGitLogLine}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Graph">
                     <DataGridTemplateColumn.CellTemplate>
