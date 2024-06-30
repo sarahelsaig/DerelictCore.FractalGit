@@ -48,7 +48,7 @@
                                         </ItemsPanelTemplate>
                                     </ListBox.ItemsPanel>
                                 </ListBox>
-                                <TextBlock Text="{Binding Subject}"></TextBlock>
+                                <TextBlock Text="{Binding Subject}" />
                             </DockPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:DerelictCore.FractalGit"
+             xmlns:system="using:System"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:m="using:DerelictCore.FractalGit.Models"
+             xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DerelictCore.FractalGit.Controls.CommitDetails"
+             x:DataType="vm:CommitDetailsViewModel">
+
+    <Design.DataContext>
+        <vm:DesignCommitDetailsViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.Box">
+            <Setter Property="Padding" Value="12"></Setter>
+            <Setter Property="Background" Value="Gray"></Setter>
+        </Style>
+        <Style Selector=":is(Control).Dimmed">
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
+    </UserControl.Styles>
+
+    <TabControl>
+        <TabItem Header="Commit">
+            <ScrollViewer IsVisible="{Binding Line, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="128 6 Auto 6 Auto" RowDefinitions="Auto Auto Auto Auto">
+                        <Rectangle Grid.RowSpan="4" Fill="Gray" Width="128" Height="128" /> <!-- Author Image Placeholder -->
+                        <TextBlock Grid.Column="2" Grid.Row="0">Author:</TextBlock>
+                        <TextBlock Grid.Column="2" Grid.Row="1">Author date:</TextBlock>
+                        <TextBlock Grid.Column="2" Grid.Row="2">Commit hash:</TextBlock>
+                        <TextBlock Grid.Column="2" Grid.Row="3">Parent:</TextBlock>
+                        <TextBlock Grid.Column="4" Grid.Row="0">
+                            <Run Text="{Binding Line.AuthorName}" /> &lt;<Run Text="{Binding Line.AuthorEmail}" />&gt;
+                        </TextBlock>
+                        <TextBlock Grid.Column="4" Grid.Row="1">
+                            <Run Text="{Binding Line.AuthorDate, Converter={x:Static local:Converters.HumanDateTime}}" />
+                            (<Run Text="{Binding Line.AuthorDate}" />)
+                        </TextBlock>
+                        <TextBlock Grid.Column="4" Grid.Row="2" Text="{Binding Line.Hash}" />
+                        <TextBlock Grid.Column="4" Grid.Row="3">TODO</TextBlock>
+                    </Grid>
+
+                    <StackPanel>
+                        <TextBlock Classes="Box Dimmed"
+                                   Text="{Binding Line.Subject}"
+                                   IsVisible="{Binding Details, Converter={x:Static ObjectConverters.IsNull}}" />
+                        <TextBlock Classes="Box"
+                                   Text="{Binding Details}"
+                                   IsVisible="{Binding Details, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="6">
+                        <TextBlock>Related links: TODO</TextBlock>
+                        <TextBlock>Contained in no branch (TODO)</TextBlock>
+                        <TextBlock>Contained in no tag (TODO)</TextBlock>
+                    </StackPanel>
+
+                    <TextBlock>Derives from tag: ??? + N commits (TODO)</TextBlock>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+    </TabControl>
+</UserControl>
