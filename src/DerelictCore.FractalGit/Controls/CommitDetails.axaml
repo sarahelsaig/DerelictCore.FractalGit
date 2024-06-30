@@ -41,26 +41,31 @@
                             <Run Text="{Binding Line.AuthorDate, Converter={x:Static local:Converters.HumanDateTime}}" />
                             (<Run Text="{Binding Line.AuthorDate}" />)
                         </TextBlock>
-                        <TextBlock Grid.Column="4" Grid.Row="2" Text="{Binding Line.Hash}" />
+                        <TextBlock Grid.Column="4" Grid.Row="2">
+                            <Run Text="{Binding Line.Hash}" />
+                            (double click to copy TODO)
+                        </TextBlock>
                         <TextBlock Grid.Column="4" Grid.Row="3">TODO</TextBlock>
                     </Grid>
 
                     <StackPanel>
                         <TextBlock Classes="Box Dimmed"
                                    Text="{Binding Line.Subject}"
-                                   IsVisible="{Binding Details, Converter={x:Static ObjectConverters.IsNull}}" />
+                                   IsVisible="{Binding Body, Converter={x:Static ObjectConverters.IsNull}}" />
                         <TextBlock Classes="Box"
-                                   Text="{Binding Details}"
-                                   IsVisible="{Binding Details, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                   Text="{Binding Body}"
+                                   IsVisible="{Binding Body, Converter={x:Static ObjectConverters.IsNotNull}}" />
                     </StackPanel>
 
                     <StackPanel Spacing="6">
-                        <TextBlock>Related links: TODO</TextBlock>
+                        <TextBlock>Related links: View commit on GitHub, View PR and related issue (if exist; TODO)</TextBlock>
                         <TextBlock>Contained in no branch (TODO)</TextBlock>
-                        <TextBlock>Contained in no tag (TODO)</TextBlock>
+                        <TextBlock IsVisible="{Binding DefaultBranchName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            Default branch: <Run Text="{Binding DefaultBranchName}" />
+                            (<Run Text="{Binding CommitsAhead}" /> ahead, <Run Text="{Binding CommitsBehind}" /> behind)
+                            (TODO)
+                        </TextBlock>
                     </StackPanel>
-
-                    <TextBlock>Derives from tag: ??? + N commits (TODO)</TextBlock>
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
