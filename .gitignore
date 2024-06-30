@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+.editorconfig
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -376,9 +377,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Rider files
-.idea/
-
 # VS Code files
 .vscode/*
 !.vscode/settings.json
@@ -398,4 +396,5 @@ FodyWeavers.xsd
 *.msp
 
 # JetBrains Rider
+.idea/
 *.sln.iml

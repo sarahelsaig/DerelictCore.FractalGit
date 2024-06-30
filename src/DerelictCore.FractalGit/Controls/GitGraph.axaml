@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:DerelictCore.FractalGit"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:DerelictCore.FractalGit.Models"
+             xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
+             xmlns:v="using:DerelictCore.FractalGit.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DerelictCore.FractalGit.Controls.GitGraph"
+             x:DataType="vm:GitGraphViewModel">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:GitGraphViewModel WorkingDirectory="/home/sarah/Projects/DerelictCore.FractalGit" />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6 0" />
+        </Style>
+    </UserControl.Styles>
+
+    <DockPanel>
+        <Label DockPanel.Dock="Top" Content="{Binding WorkingDirectory}" />
+        <DataGrid ItemsSource="{Binding Lines}"
+                  IsReadOnly="True"
+                  GridLinesVisibility="All"
+                  BorderThickness="1"
+                  BorderBrush="Gray"
+                  CanUserResizeColumns="True"
+                  SelectedItem="{Binding $parent[v:MainWindow].((vm:MainWindowViewModel)DataContext).SelectedGitLogLine}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Graph">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding Graph}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Description">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <DockPanel>
+                                <ListBox DockPanel.Dock="Left" ItemsSource="{Binding RefNames}">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                </ListBox>
+                                <TextBlock Text="{Binding Subject}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Author">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding AuthorName}"
+                                       ToolTip.Tip="{Binding AuthorEmail}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding AuthorDate, Converter={x:Static local:Converters.HumanDateTime}}"
+                                       ToolTip.Tip="{Binding AuthorDate, Converter={x:Static local:Converters.IsoDateTime}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Hash">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:GitLogLine">
+                            <TextBlock Text="{Binding Hash, Converter={x:Static local:Converters.StringTake}, ConverterParameter=8}"
+                                       ToolTip.Tip="{Binding Hash}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>
+

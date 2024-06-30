@@ -1,8 +1,35 @@
-﻿namespace DerelictCore.FractalGit.ViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DerelictCore.FractalGit.Models;
+using System.ComponentModel;
 
-public class MainWindowViewModel : ViewModelBase
+namespace DerelictCore.FractalGit.ViewModels;
+
+public partial class MainWindowViewModel : ViewModelBase
 {
-#pragma warning disable CA1822 // Mark members as static
-    public string Greeting => "Welcome to Avalonia!";
-#pragma warning restore CA1822 // Mark members as static
+    [ObservableProperty]
+    private string _filter = string.Empty;
+
+    [ObservableProperty]
+    private int _changedFileCount;
+
+    [ObservableProperty]
+    private GitLogLine? _selectedGitLogLine;
+
+    [ObservableProperty]
+    private GitGraphViewModel _graph = new();
+
+    [ObservableProperty]
+    private CommitDetailsViewModel _details;
+
+    public MainWindowViewModel() => _details = new(this);
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(SelectedGitLogLine) && SelectedGitLogLine is { } selected)
+        {
+            Details = new(this, selected);
+        }
+
+        base.OnPropertyChanged(e);
+    }
 }
