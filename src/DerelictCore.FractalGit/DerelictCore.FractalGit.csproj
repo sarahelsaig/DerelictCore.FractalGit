@@ -26,6 +26,7 @@
     <PackageReference Include="jp2masa.Avalonia.PropertyGenerator.CSharp" Version="0.10.0-beta7" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.3.0" />
+    <PackageReference Include="Lombiq.HelpfulLibraries.Common" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>

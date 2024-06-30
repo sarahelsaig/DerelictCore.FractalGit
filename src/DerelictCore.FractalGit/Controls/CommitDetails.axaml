@@ -45,7 +45,8 @@
                             <Run Text="{Binding Line.Hash}" />
                             (double click to copy TODO)
                         </TextBlock>
-                        <TextBlock Grid.Column="4" Grid.Row="3">TODO</TextBlock>
+                        <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding ParentHashes}" Background="Transparent">
+                        </ListBox>
                     </Grid>
 
                     <StackPanel>

@@ -1,8 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using DerelictCore.FractalGit.Models;
+using DerelictCore.FractalGit.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DerelictCore.FractalGit.ViewModels;
@@ -12,7 +16,6 @@ public partial class CommitDetailsViewModel : ViewModelBase
     [ObservableProperty]
     private GitLogLine _line;
 
-    // Get via `git show --format=format:%B cd6506c63b0041cc4fe43df4a14d6eb0c3217674`.
     [ObservableProperty]
     private string? _body;
 
@@ -26,7 +29,6 @@ public partial class CommitDetailsViewModel : ViewModelBase
     [ObservableProperty]
     private int _commitsBehind;
 
-    // Get via `git show --format=format:%P cd6506c63b0041cc4fe43df4a14d6eb0c3217674`, space-separated long format.
     public ObservableCollection<string> ParentHashes { get; set; } = [];
 
     // Commands to check:
@@ -42,30 +44,45 @@ public partial class CommitDetailsViewModel : ViewModelBase
     {
         Main = main;
         Line = line ?? new();
+
+        // Intentional fire-and-forget call.
+#pragma warning disable VSTHRD110
+#pragma warning disable MA0134
+        UpdateDetailsAsync();
+#pragma warning restore MA0134
+#pragma warning restore VSTHRD110
     }
 
     protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
 
+        if (e.PropertyName is nameof(Line))
+        {
+            await UpdateDetailsAsync();
+        }
+    }
+
+    private Task UpdateDetailsAsync() =>
+        Main is not null && Main?.Graph?.WorkingDirectory?.Trim() is { Length: > 0 } cwd && Line.Hash is { } hash
+            ? UpdateDetailsInnerAsync(new GitService("git", cwd, NullLogger.Instance), hash)
+            : Task.CompletedTask;
+
+    private async Task UpdateDetailsInnerAsync(IGitService service, string hash)
+    {
         try
         {
-            if (Main is not null && e.PropertyName is nameof(Line))
-            {
-                await UpdateDetailsAsync();
-            }
+            Body = string.Join('\n', await service.GitWithOutputAsync("show", "--format=format:%B", hash)).Trim();
+            ParentHashes.SetItems((await service.GitWithOutputAsync("show", "--format=format:%P", hash))
+                .WhereNot(string.IsNullOrWhiteSpace)
+                .FirstOrDefault()?
+                .Split()
+                .WhereNot(string.IsNullOrEmpty));
         }
         catch
         {
             // Ignore errors in async event handling.
         }
-    }
-
-    private async Task UpdateDetailsAsync()
-    {
-        if (Main?.Graph?.WorkingDirectory?.Trim() is not { Length: > 0 } cwd) return;
-
-
     }
 }
 

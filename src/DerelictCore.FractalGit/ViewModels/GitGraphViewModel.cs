@@ -9,7 +9,7 @@ public partial class GitGraphViewModel : ViewModelBase
     [ObservableProperty]
     private GitLogLine? _selected;
 
-    public string WorkingDirectory { get; set; } = string.Empty;
+    public string WorkingDirectory { get; set; } = "/home/sarah/Projects/Open-Source-Orchard-Core-Extensions";
 
     public ObservableCollection<GitLogLine> Lines { get; set; } = GitLogLine.SampleDataSet;
 }
