@@ -3,18 +3,25 @@
              x:Class="DerelictCore.FractalGit.App"
              xmlns:local="using:DerelictCore.FractalGit"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
+        <!-- Use Fluent Theme. If "palettes.json" is present in the executable directory, color palette is loaded from tha -->
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+
+        <!-- Override some ugly behavior when using custom color palette. -->
+        <Style Selector="TextBox"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
+        <Style Selector="ComboBox"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
+        <Style Selector="DatePicker"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
+        <Style Selector="TimePicker"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
+        <Style Selector="DataGridColumnHeader"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
     </Application.Styles>
 
-     <Application.Resources>
-         <FontFamily x:Key="NunitoFont">avares://GoogleFonts/Assets/Fonts#Nunito</FontFamily>
-     </Application.Resources>
+    <Application.Resources>
+        <FontFamily x:Key="NunitoFont">avares://GoogleFonts/Assets/Fonts#Nunito</FontFamily>
+    </Application.Resources>
 </Application>

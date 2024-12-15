@@ -2,19 +2,25 @@
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DerelictCore.FractalGit;
 
 public static class Program
 {
+    public static IList<string> Arguments { get; private set; }
+
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args) =>
+    public static void Main(string[] args)
+    {
+        Arguments = args;
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
+    }
 
     [SuppressMessage(
         "ReSharper",
@@ -25,7 +31,7 @@ public static class Program
         IconProvider.Current
             .Register<FontAwesomeIconProvider>();
 
-        return AppBuilder.Configure<App>()
+        return AppBuilder.Configure<App>(() => App.InitApp(Arguments))
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
