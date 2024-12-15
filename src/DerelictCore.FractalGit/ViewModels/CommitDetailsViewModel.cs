@@ -64,11 +64,11 @@ public partial class CommitDetailsViewModel : ViewModelBase
     }
 
     private Task UpdateDetailsAsync() =>
-        Main is not null && Main?.Graph?.WorkingDirectory?.Trim() is { Length: > 0 } cwd && Line.Hash is { } hash
+        Main?.Graph?.WorkingDirectory?.Trim() is { Length: > 0 } cwd && Line.Hash is { } hash
             ? UpdateDetailsInnerAsync(new GitService("git", cwd, NullLogger.Instance), hash)
             : Task.CompletedTask;
 
-    private async Task UpdateDetailsInnerAsync(IGitService service, string hash)
+    private async Task UpdateDetailsInnerAsync(GitService service, string hash)
     {
         try
         {

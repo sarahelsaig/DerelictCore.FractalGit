@@ -50,8 +50,7 @@ public class GitLogLineTests
                     line.Subject ?? string.Empty))
                 .ToArray();
 
-            actual.ShouldBe(new[]
-            {
+            actual.ShouldBe([
 #pragma warning disable
                 ("*"                 , "198c21c83dd84646b349b9491b2895eb0beba4ba", "Lombiq Bot"     , "bot@lombiq.com"            , 638532870150000000, "HEAD -> dev|origin/dev|origin/HEAD", "Merge pull request #773 from Lombiq/issue/OSOE-862"),
                 ("| *"               , "94ce07e27a18d3444d5c87f43c7dcf6e7b325a35", "Benedek Farkas" , "benedek.farkas@lombiq.com" , 638532857610000000, string.Empty                        , "Updating LGHA to dev after merging issue branch"),
@@ -69,7 +68,7 @@ public class GitLogLineTests
                 ("| * | | | | | |"   , "cd6506c63b0041cc4fe43df4a14d6eb0c3217674", "Sára El-Saig"   , "sara.el-saig@lombiq.com"   , 638532686380000000, string.Empty                        , "Merge remote-tracking branch 'origin/dev' into issue/OCC-245-cloudsmith"),
                 ("* | | | | | | |"   , "bc50f9f589d18f4fea6205ce755e2a3935f2efa7", "Lombiq Bot"     , "bot@lombiq.com"            , 638532153610000000, string.Empty                        , "Merge pull request #786 from Lombiq/issue/OSOE-744"),
 #pragma warning restore
-            });
+            ]);
         }
         finally
         {
@@ -105,7 +104,7 @@ public class GitLogLineTests
         return Path.Join(temp, $"fractalgit-test-{Guid.NewGuid():D}");
     }
 
-    private class TestOutputLogger : ILogger
+    private sealed class TestOutputLogger : ILogger
     {
         private readonly ITestOutputHelper _output;
 
