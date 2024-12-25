@@ -18,16 +18,10 @@
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
-    <PackageReference Include="CliWrap" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
-    <PackageReference Include="Humanizer" />
     <PackageReference Include="MessageBox.Avalonia" />
     <PackageReference Include="jp2masa.Avalonia.PropertyGenerator.CSharp" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-    <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" />
-    <PackageReference Include="Lombiq.HelpfulLibraries.Common" />
-    <PackageReference Include="System.CommandLine" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,5 +31,9 @@
     <None Update="palettes.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DerelictCore.FractalGit.Abstractions\DerelictCore.FractalGit.Abstractions.csproj" />
   </ItemGroup>
 </Project>

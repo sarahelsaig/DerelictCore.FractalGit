@@ -1,15 +1,17 @@
 ﻿using Avalonia;
+using DerelictCore.FractalGit.Abstractions.Services;
+using DerelictCore.FractalGit.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DerelictCore.FractalGit;
 
 public static class Program
 {
-    private static IList<string> Arguments { get; set; } = [];
+    public static IServiceProvider ProgramServices { get; private set; } = null!; // Initialized in Main.
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -17,9 +19,12 @@ public static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Arguments = args;
-        BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        var services = Startups.ConfigureServices([typeof(Startups).Assembly, typeof(Program).Assembly]);
+        using var serviceProvider = services.BuildServiceProvider();
+        serviceProvider.GetRequiredService<CommandLineArgumentsAccessor>().Arguments = args;
+        ProgramServices = serviceProvider;
+
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
     [SuppressMessage(
@@ -31,7 +36,7 @@ public static class Program
         IconProvider.Current
             .Register<FontAwesomeIconProvider>();
 
-        return AppBuilder.Configure(() => App.InitApp(Arguments))
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();

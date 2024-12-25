@@ -1,103 +1,52 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using Avalonia.Styling;
-using Avalonia.Themes.Fluent;
-using DerelictCore.FractalGit.JsonConverters;
-using DerelictCore.FractalGit.ViewModels;
+using DerelictCore.FractalGit.Models;
+using DerelictCore.FractalGit.Services;
 using DerelictCore.FractalGit.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using PalettesDictionary = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string,
-    Avalonia.Themes.Fluent.ColorPaletteResources>>;
 
 namespace DerelictCore.FractalGit;
 
 public partial class App : Application
 {
-    private const string PalettesFileName = "palettes.json";
-    private static readonly JsonSerializerOptions _paletteJsonOptions = new()
-    {
-        WriteIndented = true,
-        PropertyNameCaseInsensitive = false,
-        Converters = { new ColorJsonConverter() },
-    };
+    private IServiceScope? _applicationServiceScope;
 
-    public string? CreatePalettesFileWithThemeName { get; set; }
-    public string? UsePalette { get; set; } = "Lavender";
-
-    private IDictionary<ThemeVariant, ColorPaletteResources> Palettes => Styles
-        .CastWhere<FluentTheme>()
-        .First()
-        .Palettes;
+    public IServiceProvider ApplicationServices =>
+        _applicationServiceScope?.ServiceProvider ?? Program.ProgramServices;
 
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var palettes = new PalettesDictionary(StringComparer.OrdinalIgnoreCase);
+        // If you use CommunityToolkit, line below is needed to remove Avalonia data validation.
+        // Without this line you will get duplicate validations from both Avalonia and CT
+        BindingPlugins.DataValidators.RemoveAt(0);
 
-        if (File.Exists(PalettesFileName))
-        {
-            var json = File.ReadAllText(PalettesFileName);
-            palettes.AddRange(JsonSerializer.Deserialize<PalettesDictionary>(json, _paletteJsonOptions) ?? []);
-            LoadPalette(palettes);
-        }
+        // Initialize this service provider.
+        _applicationServiceScope = Program.ProgramServices.CreateScope();
+
+        var applicationLoadedHandlers = ApplicationServices.GetServices<IApplicationLoadedHandler>().AsList();
+        applicationLoadedHandlers.ForEach(handler => handler.BeforeDataContextAttached(this));
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = ApplicationServices.GetRequiredService<MainViewModelAccessor>().ViewModel,
             };
         }
+        else
+        {
+            throw new InvalidOperationException(
+                $"Unsupported application lifetime ({ApplicationLifetime?.GetType().FullName ?? "none"}).");
+        }
 
-        SavePalette(palettes);
+        applicationLoadedHandlers.ForEach(handler => handler.AfterDataContextAttached(this));
 
         base.OnFrameworkInitializationCompleted();
-    }
-
-    private void LoadPalette(PalettesDictionary palettes)
-    {
-        if (string.IsNullOrWhiteSpace(UsePalette)) return;
-
-        if (!palettes.TryGetValue(UsePalette, out var palette))
-        {
-            throw new InvalidOperationException($"Could not find palette \"{UsePalette}\". The available palettes " +
-                                                $"are {string.Join(", ", palettes.Keys)}.");
-        }
-
-        if (palette.TryGetValue(ThemeVariant.Light.Key.ToString()!, out var light)) Palettes[ThemeVariant.Light] = light;
-        if (palette.TryGetValue(ThemeVariant.Dark.Key.ToString()!, out var dark)) Palettes[ThemeVariant.Dark] = dark;
-    }
-
-    private void SavePalette(PalettesDictionary palettes)
-    {
-        if (CreatePalettesFileWithThemeName == null) return;
-
-        palettes[CreatePalettesFileWithThemeName] = Styles
-            .CastWhere<FluentTheme>()
-            .First()
-            .Palettes
-            .ToDictionary(pair => pair.Key.Key.ToString() ?? string.Empty, pair => pair.Value);
-
-        File.WriteAllText(PalettesFileName, JsonSerializer.Serialize(palettes, palettes.GetType(), _paletteJsonOptions));
-    }
-
-    public static App InitApp(IList<string> arguments)
-    {
-        var app = new App();
-
-        var usePaletteIndex = arguments.IndexOf("--palette");
-        if (usePaletteIndex < 0) usePaletteIndex = arguments.IndexOf("--theme");
-        if (usePaletteIndex >= 0)
-        {
-            app.UsePalette = arguments[usePaletteIndex + 1];
-        }
-
-        return app;
     }
 }

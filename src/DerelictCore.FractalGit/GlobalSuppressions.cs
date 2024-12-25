@@ -6,3 +6,8 @@ using System.Diagnostics.CodeAnalysis;
     Justification = "Too many false positives!",
     Scope = "module")]
 
+[assembly: SuppressMessage(
+    "Minor Code Smell",
+    "S2333:Redundant modifiers should not be used",
+    Justification = "Needed by Avalonia generated code.",
+    Scope = "module")]

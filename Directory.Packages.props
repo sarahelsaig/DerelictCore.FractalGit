@@ -16,6 +16,7 @@
     <PackageVersion Include="jp2masa.Avalonia.PropertyGenerator.CSharp" Version="0.10.0-beta7" />
     <PackageVersion Include="Lombiq.Analyzers.OrchardCore" Version="5.1.0" />
     <PackageVersion Include="Lombiq.HelpfulLibraries.Common" Version="12.0.0" />
+    <PackageVersion Include="MedallionTopologicalSort" Version="1.0.0" />
     <PackageVersion Include="MessageBox.Avalonia" Version="3.2.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.0" />
