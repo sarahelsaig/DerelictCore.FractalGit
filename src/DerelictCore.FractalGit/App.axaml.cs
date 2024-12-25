@@ -8,7 +8,6 @@ using DerelictCore.FractalGit.ViewModels;
 using DerelictCore.FractalGit.Views;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -61,7 +60,6 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    [SuppressMessage("Code Smell", "S2302:\"nameof\" should be used", Justification = "Not applicable.")]
     private void LoadPalette(PalettesDictionary palettes)
     {
         if (string.IsNullOrWhiteSpace(UsePalette)) return;

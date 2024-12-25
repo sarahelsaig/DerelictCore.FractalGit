@@ -9,7 +9,7 @@ namespace DerelictCore.FractalGit;
 
 public static class Program
 {
-    public static IList<string> Arguments { get; private set; }
+    private static IList<string> Arguments { get; set; } = [];
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -31,7 +31,7 @@ public static class Program
         IconProvider.Current
             .Register<FontAwesomeIconProvider>();
 
-        return AppBuilder.Configure<App>(() => App.InitApp(Arguments))
+        return AppBuilder.Configure(() => App.InitApp(Arguments))
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();

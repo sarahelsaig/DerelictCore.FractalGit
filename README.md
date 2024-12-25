@@ -4,4 +4,4 @@ A git graphical frontend with submodule operations in mind and for those who are
 
 ## Acknowledgements
 
-The software is made with the [Avalonia UI](https://avaloniaui.net/), the default color themes provided by the <https://theme.xaml.live/> site.
+The software is using [Avalonia UI](https://avaloniaui.net/), the default color themes provided by the <https://theme.xaml.live/> site.
