@@ -23,9 +23,11 @@
     <PackageReference Include="Humanizer" />
     <PackageReference Include="MessageBox.Avalonia" />
     <PackageReference Include="jp2masa.Avalonia.PropertyGenerator.CSharp" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" />
     <PackageReference Include="Lombiq.HelpfulLibraries.Common" />
+    <PackageReference Include="System.CommandLine" />
   </ItemGroup>
 
   <ItemGroup>
