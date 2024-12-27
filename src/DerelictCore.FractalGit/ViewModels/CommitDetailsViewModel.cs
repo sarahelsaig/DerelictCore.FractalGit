@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using DerelictCore.FractalGit.Models;
-using DerelictCore.FractalGit.Services;
+using DerelictCore.FractalGit.Abstractions.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using GitLogLine = DerelictCore.FractalGit.Abstractions.Models.GitLogLine;
 
 namespace DerelictCore.FractalGit.ViewModels;
 

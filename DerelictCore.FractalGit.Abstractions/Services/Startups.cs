@@ -1,3 +1,5 @@
+using DerelictCore.FractalGit.Abstractions.Models;
+using DerelictCore.FractalGit.Models;
 using Medallion.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -30,7 +32,12 @@ public static class Startups
 
         public IEnumerable<string> Dependencies { get; } = [nameof(BeforeSetup)];
 
-        public void ConfigureServices(IServiceCollection services) { }
+        public void ConfigureServices(IServiceCollection services) =>
+            services.AddSingleton<CommandLineArgumentsAccessor>();
+
+        public void ConfigureSingleton(IServiceProvider serviceProvider) =>
+            serviceProvider.GetRequiredService<CommandLineArgumentsAccessor>().Arguments.SetItems(
+                Environment.GetCommandLineArgs()[1..]);
     }
 
     public class AfterSetup : IStartup
@@ -43,44 +50,51 @@ public static class Startups
     }
 
     /// <summary>
-    /// Creates a new <see cref="ServiceCollection"/> using any <see cref="IStartup"/> implementations found in
-    /// assemblies in the <c>plugins</c> directory, loaded in the current assembly, or in any of the <paramref
-    /// name="includedAssemblies"/>.
+    /// Creates a new <see cref="ServiceScopeProvider"/> using any <see cref="IStartup"/> implementations found by the
+    /// <c>./plugins/*.dll</c> and <c>./*.Plugin.dll</c> paths, loaded in the current assembly, or in any of the
+    /// <paramref name="includedAssemblies"/>. If there is a <see cref="IStartup.Name"/> clash, the startup is selected
+    /// to be kept in the above order of precedence.
     /// </summary>
-    public static ServiceCollection ConfigureServices(IEnumerable<Assembly> includedAssemblies)
+    public static ServiceScopeProvider CreateServiceProvider(IEnumerable<Assembly> includedAssemblies)
     {
-        var pluginsPath = Path.Join(
-            Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? typeof(Startups).Assembly).Location) ??
-                Environment.CurrentDirectory,
-            "plugins");
+        var root = Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? typeof(Startups).Assembly).Location) ??
+                   Environment.CurrentDirectory;
+        var pluginsPath = Path.Join(root, "plugins");
 
         if (!Directory.Exists(pluginsPath)) Directory.CreateDirectory(pluginsPath);
 
-        var assemblies = Directory.GetFiles(pluginsPath, "*.dll")
+        var assemblies = Directory.GetFiles(pluginsPath, "*.dll", SearchOption.TopDirectoryOnly)
+            .Concat(Directory.GetFiles(root, "*.Plugin.dll", SearchOption.TopDirectoryOnly))
             .Select(Assembly.LoadFrom)
             .Concat(AppDomain.CurrentDomain.GetAssemblies())
-            .Concat(includedAssemblies)
-            .Distinct();
+            .Concat(includedAssemblies);
 
         var startupDictionary = assemblies
             .SelectMany(assembly => assembly.GetExportedTypes())
             .Where(type => typeof(IStartup).IsAssignableFrom(type) && type.GetConstructor([]) is { })
-            .Distinct()
-            .SelectWhere(
-                type => type.GetConstructor([])?.Invoke([]) as IStartup,
-                startup => !string.IsNullOrEmpty(startup.Name))
+            .SelectWhere(type => type.GetConstructor([])?.Invoke([]) as IStartup)
+            .Where(startup => !string.IsNullOrEmpty(startup.Name))
+            .DistinctBy(startup => startup.Name)
             .ToDictionary(startup => startup.Name);
         var sortedStartups = startupDictionary
             .Values
             .OrderTopologicallyBy(startup => startup.Dependencies.Select(name => startupDictionary[name]))
-            .ThenBy(startup => startup.GetType().FullName);
+            .ThenBy(startup => startup.GetType().FullName)
+            .ToList();
 
         var services = new ServiceCollection();
+        services.AddSingleton<IEnumerable<IStartup>>(sortedStartups);
         foreach (var startup in sortedStartups)
         {
             startup.ConfigureServices(services);
         }
 
-        return services;
+        var provider = services.BuildServiceProvider();
+        foreach (var startup in sortedStartups)
+        {
+            startup.ConfigureSingleton(provider);
+        }
+
+        return new(provider);
     }
 }

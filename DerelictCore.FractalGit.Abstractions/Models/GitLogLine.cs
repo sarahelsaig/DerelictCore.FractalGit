@@ -1,4 +1,4 @@
-using DerelictCore.FractalGit.Services;
+using DerelictCore.FractalGit.Abstractions.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DerelictCore.FractalGit.Models;
+namespace DerelictCore.FractalGit.Abstractions.Models;
 
 public partial class GitLogLine
 {
@@ -20,6 +20,7 @@ public partial class GitLogLine
 
     public static async Task<IEnumerable<GitLogLine>> ExecuteAsync(
         IGitService gitService,
+        Func<Exception, Task> logErrorAsync,
         CancellationToken cancellationToken = default)
     {
         // SEP=";;$(date +%s);;"; git log --all --oneline --graph --no-abbrev-commit \
@@ -57,7 +58,7 @@ public partial class GitLogLine
         }
         catch (Exception exception)
         {
-            await exception.AlertAsync();
+            await logErrorAsync(exception);
             return [];
         }
     }

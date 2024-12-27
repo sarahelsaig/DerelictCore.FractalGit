@@ -15,9 +15,6 @@ public partial class App : Application
 {
     private IServiceScope? _applicationServiceScope;
 
-    public IServiceProvider ApplicationServices =>
-        _applicationServiceScope?.ServiceProvider ?? Program.ProgramServices;
-
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
@@ -27,17 +24,20 @@ public partial class App : Application
         BindingPlugins.DataValidators.RemoveAt(0);
 
         // Initialize this service provider.
-        _applicationServiceScope = Program.ProgramServices.CreateScope();
+        _applicationServiceScope = Program.ServiceScopeProvider.CreateScope();
+        var services = _applicationServiceScope.ServiceProvider;
 
-        var applicationLoadedHandlers = ApplicationServices.GetServices<IApplicationLoadedHandler>().AsList();
+        var applicationLoadedHandlers = services.GetServices<IApplicationLoadedHandler>().AsList();
         applicationLoadedHandlers.ForEach(handler => handler.BeforeDataContextAttached(this));
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow
             {
-                DataContext = ApplicationServices.GetRequiredService<MainViewModelAccessor>().ViewModel,
+                DataContext = services.GetRequiredService<MainViewModelAccessor>().ViewModel,
             };
+
+            desktop.MainWindow.Closed += (_, _) => _applicationServiceScope.Dispose();
         }
         else if (ApplicationLifetime is not null)
         {

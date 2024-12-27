@@ -1,11 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using DerelictCore.FractalGit.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GitLogLine = DerelictCore.FractalGit.Abstractions.Models.GitLogLine;
 
 namespace DerelictCore.FractalGit.ViewModels;
 

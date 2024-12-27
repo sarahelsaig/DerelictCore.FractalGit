@@ -1,6 +1,6 @@
 ﻿using Avalonia;
+using DerelictCore.FractalGit.Abstractions.Models;
 using DerelictCore.FractalGit.Abstractions.Services;
-using DerelictCore.FractalGit.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
@@ -11,21 +11,19 @@ namespace DerelictCore.FractalGit;
 
 public static class Program
 {
-    public static IServiceProvider ProgramServices { get; private set; } =
-        new ServiceCollection().BuildServiceProvider(); // Temporary, only needed for XAML previews.
+    public static ServiceScopeProvider ServiceScopeProvider { get; private set; } =
+        new(new ServiceCollection().BuildServiceProvider()); // Temporary, only needed for XAML previews.
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args)
+    public static void Main()
     {
-        var services = Startups.ConfigureServices([typeof(Startups).Assembly, typeof(Program).Assembly]);
-        using var serviceProvider = services.BuildServiceProvider();
-        serviceProvider.GetRequiredService<CommandLineArgumentsAccessor>().Arguments = args;
-        ProgramServices = serviceProvider;
+        using var provider = Startups.CreateServiceProvider([typeof(Startups).Assembly, typeof(Program).Assembly]);
+        ServiceScopeProvider = provider;
 
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime([]);
     }
 
     [SuppressMessage(

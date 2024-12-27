@@ -11,7 +11,6 @@ public class Startup : IStartup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<CommandLineArgumentsAccessor>();
         services.AddScoped<MainViewModelAccessor>();
         services.AddScoped<IApplicationLoadedHandler, ThemePaletteApplicationLoadedHandler>();
     }

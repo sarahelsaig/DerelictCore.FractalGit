@@ -25,9 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Models\GitLogLine.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="palettes.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -4,7 +4,7 @@ namespace DerelictCore.FractalGit.Models;
 
 public class CommandLineArgumentsAccessor
 {
-    public IList<string> Arguments { get; set; } = [];
+    public IList<string> Arguments { get; } = [];
 
     public string? GetSwitch(string name)
     {

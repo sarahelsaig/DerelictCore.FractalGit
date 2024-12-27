@@ -1,6 +1,6 @@
-using DerelictCore.FractalGit.Models;
-using DerelictCore.FractalGit.Services;
+using DerelictCore.FractalGit.Abstractions.Services;
 using Microsoft.Extensions.Logging;
+using GitLogLine = DerelictCore.FractalGit.Abstractions.Models.GitLogLine;
 
 namespace DerelictCore.FractalGit.Tests;
 
@@ -30,7 +30,7 @@ public class GitLogLineTests
             await service.CloneAsync(TestRepositoryUrl);
 
             // Get all git log results.
-            var lines = (await GitLogLine.ExecuteAsync(service)).ToList();
+            var lines = (await GitLogLine.ExecuteAsync(service, exception => throw exception)).ToList();
 
             // Uncomment this if GitLogLine has changed to update the sample.
             //// await File.WriteAllTextAsync(

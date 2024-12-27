@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
 
-namespace DerelictCore.FractalGit.Models;
+namespace DerelictCore.FractalGit.Abstractions.Models;
 
 public partial class GitLogLine
 {

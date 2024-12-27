@@ -18,3 +18,14 @@ using System.Diagnostics.CodeAnalysis;
     Justification = "Should be avoided in Avalonia ViewModels.",
     Scope = "module")]
 
+[assembly: SuppressMessage(
+    "Minor Code Smell",
+    "S3220:Method calls should not resolve ambiguously to overloads with \"params\"",
+    Justification = "Nonsense.",
+    Scope = "module")]
+
+[assembly: SuppressMessage(
+    "Usage",
+    "VSTHRD100:Avoid async void methods",
+    Justification = "This is how Avalonia works.",
+    Scope = "module")]

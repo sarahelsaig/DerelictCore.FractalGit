@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 
 namespace DerelictCore.FractalGit.Abstractions.Services;
@@ -28,4 +29,14 @@ public interface IStartup
     /// Updates the provided <paramref name="services"/> with ones relevant to this plugin.
     /// </summary>
     public void ConfigureServices(IServiceCollection services);
+
+    /// <summary>
+    /// Optional additional configuration after the service provider is built.
+    /// </summary>
+    public void ConfigureSingleton(IServiceProvider serviceProvider) { }
+
+    /// <summary>
+    /// Optional additional configuration after a service scope is created.
+    /// </summary>
+    public void ConfigureScoped(IServiceProvider serviceProvider) { }
 }

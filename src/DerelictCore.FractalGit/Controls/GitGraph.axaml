@@ -6,6 +6,7 @@
              xmlns:models="using:DerelictCore.FractalGit.Models"
              xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
              xmlns:v="using:DerelictCore.FractalGit.Views"
+             xmlns:models1="clr-namespace:DerelictCore.FractalGit.Abstractions.Models;assembly=DerelictCore.FractalGit.Abstractions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DerelictCore.FractalGit.Controls.GitGraph"
              x:DataType="vm:GitGraphViewModel">
@@ -33,15 +34,15 @@
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Graph">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="models:GitLogLine">
+                        <DataTemplate DataType="models1:GitLogLine">
                             <TextBlock Text="{Binding Graph}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="models:GitLogLine">
-                            <StackPanel Orientation="Horizontal">
+                        <DataTemplate DataType="models1:GitLogLine">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
                                 <ItemsControl ItemsSource="{Binding RefNames}" Background="Transparent">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -59,21 +60,27 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                                 <TextBlock Text="{Binding Subject}" />
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Copy"></MenuItem>
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Author">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="models:GitLogLine">
+                        <DataTemplate DataType="models1:GitLogLine">
                             <TextBlock Text="{Binding AuthorName}"
+                                       HorizontalAlignment="Stretch"
                                        ToolTip.Tip="{Binding AuthorEmail}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Date">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="models:GitLogLine">
+                        <DataTemplate DataType="models1:GitLogLine">
                             <TextBlock Text="{Binding AuthorDate, Converter={x:Static local:Converters.HumanDateTime}}"
                                        ToolTip.Tip="{Binding AuthorDate, Converter={x:Static local:Converters.IsoDateTime}}" />
                         </DataTemplate>
@@ -81,7 +88,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Hash">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="models:GitLogLine">
+                        <DataTemplate DataType="models1:GitLogLine">
                             <TextBlock Text="{Binding Hash, Converter={x:Static local:Converters.StringTake}, ConverterParameter=8}"
                                        ToolTip.Tip="{Binding Hash}"/>
                         </DataTemplate>
