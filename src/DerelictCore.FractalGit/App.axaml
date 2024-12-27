@@ -19,6 +19,7 @@
         <Style Selector="DatePicker"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
         <Style Selector="TimePicker"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
         <Style Selector="DataGridColumnHeader"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
+        <Style Selector="GridSplitter"><Setter Property="Background" Value="{DynamicResource RegionColor}"/></Style>
     </Application.Styles>
 
     <Application.Resources>
