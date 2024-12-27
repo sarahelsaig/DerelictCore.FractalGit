@@ -24,7 +24,7 @@
 
     <DockPanel>
         <Label DockPanel.Dock="Top" Content="{Binding WorkingDirectory}" />
-        <DataGrid ItemsSource="{Binding Lines}"
+        <DataGrid ItemsSource="{Binding FilteredLines}"
                   IsReadOnly="True"
                   GridLinesVisibility="All"
                   BorderThickness="1"

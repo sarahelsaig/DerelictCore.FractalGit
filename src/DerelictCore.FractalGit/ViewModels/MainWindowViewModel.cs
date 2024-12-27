@@ -29,6 +29,10 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             Details = new(this, selected);
         }
+        else if (e.PropertyName is nameof(Filter))
+        {
+            Graph.Filter = Filter;
+        }
 
         base.OnPropertyChanged(e);
     }
