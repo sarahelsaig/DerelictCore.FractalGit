@@ -52,8 +52,8 @@
         </DockPanel>
         <TextBox Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">Sidebar Placeholder</TextBox>
         <controls:GitGraph Grid.Column="1" Grid.Row="2" DataContext="{Binding Graph}" />
-        <GridSplitter Grid.Column="1" Grid.Row="3" DockPanel.Dock="Bottom"></GridSplitter>
-        <ScrollViewer Grid.Column="1" Grid.Row="4" DockPanel.Dock="Bottom">
+        <GridSplitter Grid.Column="1" Grid.Row="3"></GridSplitter>
+        <ScrollViewer Grid.Column="1" Grid.Row="4">
             <controls:CommitDetails DataContext="{Binding Details}" />
         </ScrollViewer>
     </Grid>
