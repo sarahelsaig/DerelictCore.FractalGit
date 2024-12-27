@@ -39,10 +39,10 @@ public partial class App : Application
                 DataContext = ApplicationServices.GetRequiredService<MainViewModelAccessor>().ViewModel,
             };
         }
-        else
+        else if (ApplicationLifetime is not null)
         {
             throw new InvalidOperationException(
-                $"Unsupported application lifetime ({ApplicationLifetime?.GetType().FullName ?? "none"}).");
+                $"Unsupported application lifetime ({ApplicationLifetime?.GetType().FullName ?? "null"}).");
         }
 
         applicationLoadedHandlers.ForEach(handler => handler.AfterDataContextAttached(this));

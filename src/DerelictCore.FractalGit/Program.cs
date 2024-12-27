@@ -11,7 +11,8 @@ namespace DerelictCore.FractalGit;
 
 public static class Program
 {
-    public static IServiceProvider ProgramServices { get; private set; } = null!; // Initialized in Main.
+    public static IServiceProvider ProgramServices { get; private set; } =
+        new ServiceCollection().BuildServiceProvider(); // Temporary, only needed for XAML previews.
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
