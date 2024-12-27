@@ -28,7 +28,6 @@
                   IsReadOnly="True"
                   GridLinesVisibility="All"
                   BorderThickness="1"
-                  BorderBrush="Gray"
                   CanUserResizeColumns="True"
                   SelectedItem="{Binding $parent[v:MainWindow].((vm:MainWindowViewModel)DataContext).SelectedGitLogLine}">
             <DataGrid.Columns>
@@ -42,16 +41,25 @@
                 <DataGridTemplateColumn Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="models:GitLogLine">
-                            <DockPanel>
-                                <ListBox DockPanel.Dock="Left" ItemsSource="{Binding RefNames}">
-                                    <ListBox.ItemsPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ItemsControl ItemsSource="{Binding RefNames}" Background="Transparent">
+                                    <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
+                                            <StackPanel Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
-                                </ListBox>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{DynamicResource NotificationCardWarningBackgroundBrush}"
+                                                    CornerRadius="3"
+                                                    Margin="3">
+                                                <TextBlock Text="{Binding .}" FontSize="12" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                                 <TextBlock Text="{Binding Subject}" />
-                            </DockPanel>
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
