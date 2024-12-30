@@ -30,6 +30,7 @@ public partial class CommitDetailsViewModel : ViewModelBase
     private int _commitsBehind;
 
     public ObservableCollection<string> ParentHashes { get; set; } = [];
+    public ObservableCollection<string> LineHash { get; set; } = [];
 
     // Commands to check:
     // git branch -a --contains cd6506c63b0041cc4fe43df4a14d6eb0c3217674
@@ -78,6 +79,7 @@ public partial class CommitDetailsViewModel : ViewModelBase
                 .FirstOrDefault()?
                 .Split()
                 .WhereNot(string.IsNullOrEmpty));
+            LineHash.SetItems([hash]);
         }
         catch
         {

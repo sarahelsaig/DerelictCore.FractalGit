@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
+using System.Linq;
 using GitLogLine = DerelictCore.FractalGit.Abstractions.Models.GitLogLine;
 
 namespace DerelictCore.FractalGit.ViewModels;
@@ -32,6 +33,10 @@ public partial class MainWindowViewModel : ViewModelBase
         else if (e.PropertyName is nameof(Filter))
         {
             Graph.Filter = Filter;
+        }
+        else if (e.PropertyName is nameof(Graph) && Graph is { } graph)
+        {
+            SelectedGitLogLine = graph.FilteredLines.First();
         }
 
         base.OnPropertyChanged(e);

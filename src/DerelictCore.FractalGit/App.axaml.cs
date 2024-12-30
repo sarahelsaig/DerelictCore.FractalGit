@@ -32,10 +32,13 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var vm = services.GetRequiredService<MainViewModelAccessor>();
             desktop.MainWindow = new MainWindow
             {
-                DataContext = services.GetRequiredService<MainViewModelAccessor>().ViewModel,
+                DataContext = vm.ViewModel,
             };
+
+            vm.ViewModel.Graph = new();
 
             desktop.MainWindow.Closed += (_, _) => _applicationServiceScope.Dispose();
         }

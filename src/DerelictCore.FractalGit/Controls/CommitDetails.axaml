@@ -22,6 +22,9 @@
         <Style Selector=":is(Control).Dimmed">
             <Setter Property="Opacity" Value="0.7" />
         </Style>
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="Transparent"></Setter>
+        </Style>
     </UserControl.Styles>
 
     <TabControl>
@@ -31,22 +34,18 @@
                     <Grid ColumnDefinitions="128 6 Auto 6 Auto" RowDefinitions="Auto Auto Auto Auto">
                         <Rectangle Grid.RowSpan="4" Fill="Gray" Width="128" Height="128" /> <!-- Author Image Placeholder -->
                         <TextBlock Grid.Column="2" Grid.Row="0">Author:</TextBlock>
-                        <TextBlock Grid.Column="2" Grid.Row="1">Author date:</TextBlock>
-                        <TextBlock Grid.Column="2" Grid.Row="2">Commit hash:</TextBlock>
-                        <TextBlock Grid.Column="2" Grid.Row="3">Parent:</TextBlock>
                         <TextBlock Grid.Column="4" Grid.Row="0">
                             <Run Text="{Binding Line.AuthorName}" /> &lt;<Run Text="{Binding Line.AuthorEmail}" />&gt;
                         </TextBlock>
+                        <TextBlock Grid.Column="2" Grid.Row="1">Author date:</TextBlock>
                         <TextBlock Grid.Column="4" Grid.Row="1">
                             <Run Text="{Binding Line.AuthorDate, Converter={x:Static local:Converters.HumanDateTime}}" />
                             (<Run Text="{Binding Line.AuthorDate}" />)
                         </TextBlock>
-                        <TextBlock Grid.Column="4" Grid.Row="2">
-                            <Run Text="{Binding Line.Hash}" />
-                            (double click to copy TODO)
-                        </TextBlock>
-                        <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding ParentHashes}" Background="Transparent">
-                        </ListBox>
+                        <TextBlock Grid.Column="2" Grid.Row="2">Commit hash:</TextBlock>
+                        <ListBox Grid.Column="4" Grid.Row="2" ItemsSource="{Binding LineHash}"></ListBox>
+                        <TextBlock Grid.Column="2" Grid.Row="3">Parent:</TextBlock>
+                        <ListBox Grid.Column="4" Grid.Row="3" ItemsSource="{Binding ParentHashes}"></ListBox>
                     </Grid>
 
                     <StackPanel>
