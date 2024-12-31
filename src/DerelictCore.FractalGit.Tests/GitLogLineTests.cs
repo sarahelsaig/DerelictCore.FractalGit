@@ -1,3 +1,4 @@
+using DerelictCore.FractalGit.Abstractions;
 using DerelictCore.FractalGit.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using GitLogLine = DerelictCore.FractalGit.Abstractions.Models.GitLogLine;
@@ -92,16 +93,15 @@ public class GitLogLineTests
             throw new NotSupportedException("Only Windows and Linux are supported.");
         }
 
-        var temp = OperatingSystem.IsWindows()
-            ? Environment.GetEnvironmentVariable("TEMP")
-            : "/tmp/";
-
+        var temp = Path.GetTempPath();
         if (!Directory.Exists(temp))
         {
             throw new InvalidOperationException($"The temp directory ({temp}) does not exist!");
         }
 
-        return Path.Join(temp, $"fractalgit-test-{Guid.NewGuid():D}");
+        var directory = Path.Join(temp, CommonConstants.FractalGit, "Test", Guid.NewGuid().ToString("D"));
+        if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+        return directory;
     }
 
     private sealed class TestOutputLogger : ILogger
