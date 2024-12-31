@@ -29,3 +29,9 @@ using System.Diagnostics.CodeAnalysis;
     "VSTHRD100:Avoid async void methods",
     Justification = "This is how Avalonia works.",
     Scope = "module")]
+
+[assembly: SuppressMessage(
+    "Globalization",
+    "CA1308:Normalize strings to uppercase",
+    Justification = "What a terrible rule!",
+    Scope = "module")]

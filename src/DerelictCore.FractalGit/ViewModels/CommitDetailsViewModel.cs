@@ -1,11 +1,19 @@
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DerelictCore.FractalGit.Abstractions;
 using DerelictCore.FractalGit.Abstractions.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using GitLogLine = DerelictCore.FractalGit.Abstractions.Models.GitLogLine;
 
@@ -13,6 +21,11 @@ namespace DerelictCore.FractalGit.ViewModels;
 
 public partial class CommitDetailsViewModel : ViewModelBase
 {
+    private static HttpClient _gravatarClient = new() { BaseAddress = new("https://gravatar.com/avatar/") };
+
+    public static string AuthorImageCachePath { get; }
+    public static ConcurrentDictionary<string, string> AuthorImageCache { get; }
+
     [ObservableProperty]
     private GitLogLine _line;
 
@@ -26,8 +39,12 @@ public partial class CommitDetailsViewModel : ViewModelBase
     // Get via `git rev-list --left-right --count refs/remotes/origin/dev...cd6506c63b0041cc4fe43df4a14d6eb0c3217674`.
     [ObservableProperty]
     private int _commitsAhead;
+
     [ObservableProperty]
     private int _commitsBehind;
+
+    [ObservableProperty]
+    private IImage? _authorImage;
 
     public ObservableCollection<string> ParentHashes { get; set; } = [];
     public ObservableCollection<string> LineHash { get; set; } = [];
@@ -80,10 +97,47 @@ public partial class CommitDetailsViewModel : ViewModelBase
                 .Split()
                 .WhereNot(string.IsNullOrEmpty));
             LineHash.SetItems([hash]);
+
+            if (Line.AuthorEmail?.Trim().ToLowerInvariant() is { Length: > 0 } authorEmail)
+            {
+                if (!AuthorImageCache.TryGetValue(authorEmail, out var imagePath) || !File.Exists(imagePath))
+                {
+                    var gravatarHash = Convert
+                        .ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(authorEmail)))
+                        .ToLowerInvariant();
+                    var imageBytes = await _gravatarClient.GetByteArrayAsync($"{gravatarHash}.jpg?s={128}");
+
+                    imagePath = Path.Join(AuthorImageCachePath, $"{WebUtility.UrlEncode(authorEmail)}.jpg");
+                    await File.WriteAllBytesAsync(imagePath, imageBytes);
+                    AuthorImageCache[authorEmail] = imagePath;
+                }
+
+                (AuthorImage as IDisposable)?.Dispose();
+                AuthorImage = new Bitmap(imagePath);
+            }
         }
         catch
         {
             // Ignore errors in async event handling.
+        }
+    }
+
+    static CommitDetailsViewModel()
+    {
+        AuthorImageCachePath = Path.Join(Path.GetTempPath(), CommonConstants.FractalGit, nameof(AuthorImageCache));
+
+        if (Directory.Exists(AuthorImageCachePath))
+        {
+            AuthorImageCache = new(Directory
+                .GetFiles(AuthorImageCachePath, "*.jpg", SearchOption.TopDirectoryOnly)
+                .ToDictionary(
+                    fileName => WebUtility.UrlDecode(Path.GetFileNameWithoutExtension(fileName)),
+                    fileName => fileName));
+        }
+        else
+        {
+            Directory.CreateDirectory(AuthorImageCachePath);
+            AuthorImageCache = new();
         }
     }
 }

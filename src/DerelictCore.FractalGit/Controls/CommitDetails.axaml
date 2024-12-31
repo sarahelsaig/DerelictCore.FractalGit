@@ -32,7 +32,7 @@
             <ScrollViewer IsVisible="{Binding Line, Converter={x:Static ObjectConverters.IsNotNull}}">
                 <StackPanel Spacing="12">
                     <Grid ColumnDefinitions="128 6 Auto 6 Auto" RowDefinitions="Auto Auto Auto Auto">
-                        <Rectangle Grid.RowSpan="4" Fill="Gray" Width="128" Height="128" /> <!-- Author Image Placeholder -->
+                        <Image Grid.RowSpan="4" Source="{Binding AuthorImage}" Width="128" Height="128" />
                         <TextBlock Grid.Column="2" Grid.Row="0">Author:</TextBlock>
                         <TextBlock Grid.Column="4" Grid.Row="0">
                             <Run Text="{Binding Line.AuthorName}" /> &lt;<Run Text="{Binding Line.AuthorEmail}" />&gt;
