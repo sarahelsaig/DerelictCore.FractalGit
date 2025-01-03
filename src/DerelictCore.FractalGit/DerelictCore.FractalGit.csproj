@@ -21,6 +21,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="MessageBox.Avalonia" />
     <PackageReference Include="jp2masa.Avalonia.PropertyGenerator.CSharp" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Scripting" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" />
   </ItemGroup>
 
