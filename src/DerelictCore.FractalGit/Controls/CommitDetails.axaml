@@ -38,7 +38,7 @@
         </Style>
     </UserControl.Styles>
 
-    <TabControl>
+    <TabControl x:Name="TabControl">
         <TabItem Header="Commit">
             <ScrollViewer IsVisible="{Binding Line, Converter={x:Static ObjectConverters.IsNotNull}}">
                 <StackPanel Spacing="12">

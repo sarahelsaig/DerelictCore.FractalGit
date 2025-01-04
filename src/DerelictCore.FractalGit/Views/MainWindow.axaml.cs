@@ -3,13 +3,12 @@ using Avalonia.Interactivity;
 using DerelictCore.FractalGit.ViewModels;
 using MsBox.Avalonia;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace DerelictCore.FractalGit.Views;
 
 public partial class MainWindow : Window
 {
-    private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
+    public MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
 
     public MainWindow() => InitializeComponent();
 

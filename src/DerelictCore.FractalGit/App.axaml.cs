@@ -15,6 +15,8 @@ public partial class App : Application
 {
     private IServiceScope? _applicationServiceScope;
 
+    public IServiceProvider? ServiceProvider => _applicationServiceScope?.ServiceProvider;
+
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
