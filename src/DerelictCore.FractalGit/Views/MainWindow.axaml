@@ -33,24 +33,31 @@
 
     <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, *, 4, *">
         <Menu Grid.ColumnSpan="2">
-            <MenuItem Header="_File"></MenuItem>
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open Repository" Click="OpenRepository_OnClick" />
+                <Separator />
+                <MenuItem Header="_Explore Directory" Click="ExploreDirectory_OnClick" />
+                <MenuItem Header="_Settings" Click="Settings_OnClick" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="Exit_OnClick" />
+            </MenuItem>
         </Menu>
         <DockPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
             <TextBox Text="{Binding Filter}" Watermark="Filter" DockPanel.Dock="Right" Margin="12 6" MinWidth="250" />
             <StackPanel DockPanel.Dock="Top" Classes="ToolButtons" Orientation="Horizontal" Margin="12 6">
-                <Button ToolTip.Tip="Refresh" i:Attached.Icon="fa-solid fa-arrows-rotate" />
-                <Button ToolTip.Tip="Fetch" i:Attached.Icon="fa-solid fa-cloud-arrow-down" />
-                <Button ToolTip.Tip="Pull" i:Attached.Icon="fa-solid fa-arrow-down" />
-                <Button ToolTip.Tip="Merge" i:Attached.Icon="fa-solid fa-code-merge" />
-                <Button>
+                <Button ToolTip.Tip="Refresh" i:Attached.Icon="fa-solid fa-arrows-rotate" Click="Refresh_OnClick" />
+                <Button ToolTip.Tip="Fetch" i:Attached.Icon="fa-solid fa-cloud-arrow-down" Click="Fetch_OnClick" />
+                <Button ToolTip.Tip="Pull" i:Attached.Icon="fa-solid fa-arrow-down" Click="Pull_OnClick" />
+                <Button ToolTip.Tip="Merge" i:Attached.Icon="fa-solid fa-code-merge" Click="Merge_OnClick" />
+                <Button ToolTip.Tip="Open Commit Window" Click="Commit_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <i:Icon Value="fa-solid fa-code-compare" />
                         <TextBlock FontSize="11" Margin="6 0 0 0" Text="{Binding ChangedFileCount, StringFormat=Commit ({0})}" />
                     </StackPanel>
                 </Button>
                 <Rectangle Classes="Separator" />
-                <Button ToolTip.Tip="Open Directory" i:Attached.Icon="fa-regular fa-folder-open" />
-                <Button ToolTip.Tip="Settings" i:Attached.Icon="fa-solid fa-gear" />
+                <Button ToolTip.Tip="Explore Directory" i:Attached.Icon="fa-regular fa-folder-open" Click="ExploreDirectory_OnClick" />
+                <Button ToolTip.Tip="Settings" i:Attached.Icon="fa-solid fa-gear" Click="Settings_OnClick" />
             </StackPanel>
         </DockPanel>
         <TextBox Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">Sidebar Placeholder</TextBox>

@@ -35,3 +35,8 @@ using System.Diagnostics.CodeAnalysis;
     "CA1308:Normalize strings to uppercase",
     Justification = "What a terrible rule!",
     Scope = "module")]
+
+[assembly:SuppressMessage(
+    "ReSharper",
+    "AsyncVoidMethod",
+    Justification = "Not applicable to Avalonia event handlers.")]
