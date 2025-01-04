@@ -50,7 +50,7 @@
                                  Grid.Row="0"
                                  ItemsSource="{Binding Line, Converter={x:Static local:Converters.RoslynExpression}, ConverterParameter='new[] { $&quot;{value.AuthorName} &lt;{value.AuthorEmail}&gt;&quot; }'}"></ListBox>
 
-                        <TextBlock Classes="DetailsTableHeader" Grid.Column="2" Grid.Row="1">Author Date:</TextBlock>
+                        <TextBlock Classes="DetailsTableHeader" Grid.Column="2" Grid.Row="1" Margin="0 0 0 12">Author Date:</TextBlock>
                         <TextBlock Classes="DetailsTableText" Grid.Column="4" Grid.Row="1">
                             <Run Text="{Binding Line.AuthorDate, Converter={x:Static local:Converters.HumanDateTime}}" />
                             (<Run Text="{Binding Line.AuthorDate}" />)
@@ -73,7 +73,11 @@
                     </StackPanel>
 
                     <StackPanel Spacing="6">
-                        <TextBlock>Related Rinks: View commit on GitHub, View PR and related issue (if exist; TODO)</TextBlock>
+                        <TextBlock>
+                            Related Links:
+                            View commit on GitHub (if exist; TODO),
+                            View PR and related issue (if exist; TODO)
+                        </TextBlock>
                         <TextBlock>Contained in no branch (TODO)</TextBlock>
                         <TextBlock IsVisible="{Binding DefaultBranchName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                             Default branch: <Run Text="{Binding DefaultBranchName}" />
