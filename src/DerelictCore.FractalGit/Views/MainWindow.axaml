@@ -3,7 +3,9 @@
         xmlns:vm="using:DerelictCore.FractalGit.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:controls="using:DerelictCore.FractalGit.Controls"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="800" Width="1024" Height="800"
         x:Class="DerelictCore.FractalGit.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -12,9 +14,58 @@
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Window.Styles>
+        <Style Selector="Button :is(Control)">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Rectangle.Separator">
+            <Setter Property="Width" Value="2" />
+            <Setter Property="Fill" Value="Gray" />
+            <Setter Property="Margin" Value="0 6 6 6" />
+        </Style>
+        <Style Selector=".ToolButtons Button">
+            <Setter Property="Margin" Value="0 0 6 0" />
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, *, 4, *">
+        <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open Repository" Click="OpenRepository_OnClick" />
+                <Separator />
+                <MenuItem Header="_Explore Directory" Click="ExploreDirectory_OnClick" />
+                <MenuItem Header="_Settings" Click="Settings_OnClick" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="Exit_OnClick" />
+            </MenuItem>
+        </Menu>
+        <DockPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+            <TextBox Text="{Binding Filter}" Watermark="Filter" DockPanel.Dock="Right" Margin="12 6" MinWidth="250" />
+            <StackPanel DockPanel.Dock="Top" Classes="ToolButtons" Orientation="Horizontal" Margin="12 6">
+                <Button ToolTip.Tip="Refresh" i:Attached.Icon="fa-solid fa-arrows-rotate" Click="Refresh_OnClick" />
+                <Button ToolTip.Tip="Fetch" i:Attached.Icon="fa-solid fa-cloud-arrow-down" Click="Fetch_OnClick" />
+                <Button ToolTip.Tip="Pull" i:Attached.Icon="fa-solid fa-arrow-down" Click="Pull_OnClick" />
+                <Button ToolTip.Tip="Merge" i:Attached.Icon="fa-solid fa-code-merge" Click="Merge_OnClick" />
+                <Button ToolTip.Tip="Open Commit Window" Click="Commit_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <i:Icon Value="fa-solid fa-code-compare" />
+                        <TextBlock FontSize="11" Margin="6 0 0 0" Text="{Binding ChangedFileCount, StringFormat=Commit ({0})}" />
+                    </StackPanel>
+                </Button>
+                <Rectangle Classes="Separator" />
+                <Button ToolTip.Tip="Explore Directory" i:Attached.Icon="fa-regular fa-folder-open" Click="ExploreDirectory_OnClick" />
+                <Button ToolTip.Tip="Settings" i:Attached.Icon="fa-solid fa-gear" Click="Settings_OnClick" />
+            </StackPanel>
+        </DockPanel>
+        <TextBox Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">Sidebar Placeholder</TextBox>
+        <controls:GitGraph Grid.Column="1" Grid.Row="2" DataContext="{Binding Graph}" />
+        <GridSplitter Grid.Column="1" Grid.Row="3"></GridSplitter>
+        <ScrollViewer Grid.Column="1" Grid.Row="4">
+            <controls:CommitDetails DataContext="{Binding Details}" />
+        </ScrollViewer>
+    </Grid>
 
 </Window>
